@@ -8,9 +8,9 @@ import {
   TextField,
   Typography,
   Container,
-  Select,
-  MenuItem,
-  FormControl,
+  Switch,
+  FormGroup,
+  FormControlLabel,
 } from "@material-ui/core";
 import React, { useState } from "react";
 import "./App.css";
@@ -18,9 +18,14 @@ import { Skeleton } from "@material-ui/lab";
 
 import { Sidebar } from "./Sidebar";
 
+const validFilename = require("valid-filename");
+
 function App() {
+  const [documentName, setDocumentName] = useState("");
   const [keywords, setKeywords] = useState([]);
   const [currentKeyword, setCurrentKeyword] = useState("");
+  const [useOCR, setUseOCR] = useState(true)
+  const [attachDate, setAttachDate] = useState(true)
 
   const handleChipDelete = (key) => {
     setKeywords(
@@ -54,11 +59,17 @@ function App() {
                     style={{ width: "100%" }}
                     label="Document Name"
                     variant="outlined"
+                    helperText="Must be a valid filename"
+                    value={documentName}
+                    onChange={(e) => {
+                      setDocumentName(e.target.value);
+                    }}
+                    error={!validFilename(documentName)}
                   ></TextField>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={6}>
                   <TextField
-                    style={{ width: "50%" }}
+                    style={{ width: "100%" }}
                     label="Keywords Input"
                     variant="outlined"
                     helperText={
@@ -86,6 +97,31 @@ function App() {
                     }}
                   ></TextField>
                 </Grid>
+                <Grid item xs={6}>
+                  <FormGroup row>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={useOCR}
+                          onChange={() => setUseOCR(!useOCR)}
+                          name="checkedA"
+                        />
+                      }
+                      label="Use OCR?"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={attachDate}
+                          onChange={() => setAttachDate(!attachDate)}
+                          name="checkedA"
+                        />
+                      }
+                      label="Attach date to filename?"
+                    />
+                  </FormGroup>
+                </Grid>
+
                 <Grid item xs={12}>
                   {keywords.map((number) => (
                     <Chip
@@ -107,25 +143,6 @@ function App() {
                   >
                     Scan Now
                   </Button>
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControl variant="filled" style={{ width: "100%" }}>
-                    <Select style={{ width: "100%" }}>
-                      <MenuItem value={10}>
-                        <Grid container>
-                          <Grid item xs={3}>
-                            <img
-                              width={25}
-                              src="https://ssl.gstatic.com/images/branding/product/2x/hh_drive_96dp.png"
-                            ></img>
-                          </Grid>
-                          <Grid item xs={9}>
-                            Google Drive
-                          </Grid>
-                        </Grid>
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
                 </Grid>
               </Grid>
             </Grid>
